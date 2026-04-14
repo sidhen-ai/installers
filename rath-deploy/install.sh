@@ -187,12 +187,16 @@ clone_repository() {
     echo ""
     print_info "Cloning rath-deploy repository..."
 
-    if ! git clone "https://oauth2:${GITHUB_TOKEN}@github.com/sidhen-ai/rath-deploy.git" "$INSTALL_DIR" 2>&1 | grep -v "Cloning into"; then
+    if git clone "https://oauth2:${GITHUB_TOKEN}@github.com/sidhen-ai/rath-deploy.git" "$INSTALL_DIR" > /dev/null 2>&1; then
+        print_success "Repository cloned to $INSTALL_DIR"
+    else
         print_error "Failed to clone repository"
+        print_info "Please check:"
+        echo "  1. Repository exists and is accessible"
+        echo "  2. Token has 'Contents: Read' permission"
+        echo "  3. Install directory is writable: $INSTALL_DIR"
         exit 1
     fi
-
-    print_success "Repository cloned to $INSTALL_DIR"
 }
 
 # Run the main installer from the cloned repo
