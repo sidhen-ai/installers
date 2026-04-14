@@ -180,8 +180,8 @@ verify_token_access() {
     )
 
     for repo in "${repos[@]}"; do
-        # Use git ls-remote instead of GitHub API (more reliable)
-        if git ls-remote "https://oauth2:${GITHUB_TOKEN}@github.com/${repo}.git" HEAD > /dev/null 2>&1; then
+        # Use git ls-remote with timeout to prevent hanging
+        if GIT_TERMINAL_PROMPT=0 git -c http.timeout=30 ls-remote "https://oauth2:${GITHUB_TOKEN}@github.com/${repo}.git" HEAD > /dev/null 2>&1; then
             print_success "Access verified: $repo"
         else
             print_error "Cannot access $repo"
@@ -191,6 +191,7 @@ verify_token_access() {
             echo "  2. You have access to the repository"
             echo "  3. Token has required permissions (Contents: Read, Metadata: Read)"
             echo "  4. Repository is selected in token's repository access list"
+            echo "  5. Network connection is stable"
             exit 1
         fi
     done
