@@ -179,21 +179,39 @@ verify_token_access() {
     )
 
     for repo in "${repos[@]}"; do
-        if ! curl -sf \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$repo" > /dev/null 2>&1; then
-            print_error "Cannot access $repo"
+        local retry_count=0
+        local max_retries=3
+        local success=false
+
+        while [ $retry_count -lt $max_retries ]; do
+            if curl -sf --max-time 30 \
+                -H "Authorization: Bearer $GITHUB_TOKEN" \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "https://api.github.com/repos/$repo" > /dev/null 2>&1; then
+                success=true
+                break
+            fi
+            retry_count=$((retry_count + 1))
+            if [ $retry_count -lt $max_retries ]; then
+                echo -n "." # Progress indicator for retry
+                sleep 2
+            fi
+        done
+
+        if [ "$success" = true ]; then
+            print_success "Access verified: $repo"
+        else
+            print_error "Cannot access $repo after $max_retries attempts"
             echo ""
             print_info "Please check:"
             echo "  1. Token is valid and not expired"
             echo "  2. You have access to the repository"
             echo "  3. Token has required permissions (Contents: Read, Metadata: Read)"
             echo "  4. Repository is selected in token's repository access list"
+            echo "  5. Network connection is stable"
             exit 1
         fi
-        print_success "Access verified: $repo"
     done
 }
 
