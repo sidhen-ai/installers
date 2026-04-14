@@ -174,6 +174,7 @@ verify_token_access() {
 
     repos=(
         "sidhen-ai/rath-deploy"
+        "sidhen-ai/sithe-core"
         "sidhen-ai/glinn-app"
         "sidhen-ai/cairn-kiosk"
     )
