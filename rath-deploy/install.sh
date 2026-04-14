@@ -202,7 +202,7 @@ clone_repository() {
     echo ""
     print_info "Cloning rath-deploy repository..."
 
-    if GIT_TERMINAL_PROMPT=0 git -c http.sslVerify=false clone "https://oauth2:${GITHUB_TOKEN}@github.com/sidhen-ai/rath-deploy.git" "$INSTALL_DIR" > /dev/null 2>&1; then
+    if GIT_TERMINAL_PROMPT=0 git -c http.sslVerify=false clone --depth 1 "https://oauth2:${GITHUB_TOKEN}@github.com/sidhen-ai/rath-deploy.git" "$INSTALL_DIR" > /dev/null 2>&1; then
         print_success "Repository cloned to $INSTALL_DIR"
     else
         print_error "Failed to clone repository"
