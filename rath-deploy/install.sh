@@ -125,7 +125,7 @@ get_github_token() {
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
 
-    read -sp "Enter your GitHub token (github_pat_xxx): " GITHUB_TOKEN
+    read -sp "Enter your GitHub token (github_pat_xxx): " GITHUB_TOKEN < /dev/tty
     echo ""
     echo ""
 
