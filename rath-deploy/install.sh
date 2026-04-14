@@ -100,6 +100,12 @@ check_dependencies() {
 
 # Get GitHub token from user
 get_github_token() {
+    # Check if token is already provided via environment variable
+    if [ -n "$GITHUB_TOKEN" ]; then
+        print_info "Using token from GITHUB_TOKEN environment variable"
+        return 0
+    fi
+
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "  GitHub Authentication Required"
@@ -130,9 +136,18 @@ get_github_token() {
         # Running interactively
         read -sp "Enter your GitHub token (github_pat_xxx): " GITHUB_TOKEN
     else
-        # Piped input - force read from tty
-        exec < /dev/tty
-        read -sp "Enter your GitHub token (github_pat_xxx): " GITHUB_TOKEN
+        # Piped input - try to read from tty
+        if [ -c /dev/tty ]; then
+            exec < /dev/tty
+            read -sp "Enter your GitHub token (github_pat_xxx): " GITHUB_TOKEN
+        else
+            # No tty available (CI/automation)
+            print_error "No terminal available for input"
+            print_info "Set GITHUB_TOKEN environment variable:"
+            echo "  export GITHUB_TOKEN='your_token'"
+            echo "  curl -fsSL https://raw.githubusercontent.com/sidhen-ai/installers/main/rath-deploy/install.sh | bash"
+            exit 1
+        fi
     fi
     echo ""
     echo ""
