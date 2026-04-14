@@ -181,7 +181,7 @@ verify_token_access() {
 
     for repo in "${repos[@]}"; do
         # Use git ls-remote with timeout to prevent hanging
-        if GIT_TERMINAL_PROMPT=0 git -c http.timeout=30 ls-remote "https://oauth2:${GITHUB_TOKEN}@github.com/${repo}.git" HEAD > /dev/null 2>&1; then
+        if GIT_TERMINAL_PROMPT=0 git -c http.timeout=30 -c http.sslVerify=false ls-remote "https://oauth2:${GITHUB_TOKEN}@github.com/${repo}.git" HEAD > /dev/null 2>&1; then
             print_success "Access verified: $repo"
         else
             print_error "Cannot access $repo"
@@ -202,7 +202,7 @@ clone_repository() {
     echo ""
     print_info "Cloning rath-deploy repository..."
 
-    if git clone "https://oauth2:${GITHUB_TOKEN}@github.com/sidhen-ai/rath-deploy.git" "$INSTALL_DIR" > /dev/null 2>&1; then
+    if GIT_TERMINAL_PROMPT=0 git -c http.sslVerify=false clone "https://oauth2:${GITHUB_TOKEN}@github.com/sidhen-ai/rath-deploy.git" "$INSTALL_DIR" > /dev/null 2>&1; then
         print_success "Repository cloned to $INSTALL_DIR"
     else
         print_error "Failed to clone repository"
