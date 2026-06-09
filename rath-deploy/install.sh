@@ -142,6 +142,7 @@ get_github_token() {
     echo "   Repository access → Only select repositories:"
     echo "   ✓ sidhen-ai/rath-deploy"
     echo "   ✓ sidhen-ai/sdk-runtime-python"
+    echo "   ✓ sidhen-ai/lib-engine-releases"
     echo "   ✓ sidhen-ai/sithe-core"
     echo "   ✓ sidhen-ai/glinn-app"
     echo "   ✓ sidhen-ai/cairn-kiosk"
@@ -197,6 +198,7 @@ verify_token_access() {
     repos=(
         "sidhen-ai/rath-deploy"
         "sidhen-ai/sdk-runtime-python"
+        "sidhen-ai/lib-engine-releases"
         "sidhen-ai/sithe-core"
         "sidhen-ai/glinn-app"
         "sidhen-ai/cairn-kiosk"
