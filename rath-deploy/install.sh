@@ -228,6 +228,12 @@ clone_repository() {
     print_info "Cloning rath-deploy repository..."
 
     if GIT_TERMINAL_PROMPT=0 git -c http.sslVerify=false clone --depth 1 "https://oauth2:${GITHUB_TOKEN}@github.com/sidhen-ai/rath-deploy.git" "$INSTALL_DIR" > /dev/null 2>&1; then
+        # Strip the embedded read-only PAT from .git/config so any future
+        # `git push` / `git pull` in this working copy goes through the
+        # user's normal credentials (keychain / gh / etc.) instead of
+        # being pinned to a token that can only read 6 specific repos.
+        git -C "$INSTALL_DIR" remote set-url origin \
+            "https://github.com/sidhen-ai/rath-deploy.git" 2>/dev/null || true
         print_success "Repository cloned to $INSTALL_DIR"
     else
         print_error "Failed to clone repository"
