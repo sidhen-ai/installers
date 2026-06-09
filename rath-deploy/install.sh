@@ -295,3 +295,11 @@ main() {
 
 # Run main function
 main
+
+# Force exit so `curl | bash` returns to the parent shell. Without this,
+# bash keeps reading from stdin after `main` returns — and because we did
+# `exec < /dev/tty` to make prompts work, stdin is now the terminal, which
+# never EOFs. The user sees the install summary, the terminal "hangs", and
+# even pressing Enter doesn't get them back to a prompt (bash reads each
+# keystroke as a new command).
+exit 0
