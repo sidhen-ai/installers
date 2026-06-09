@@ -154,12 +154,12 @@ get_github_token() {
     # Read from terminal (handle piped input)
     if [ -t 0 ]; then
         # Running interactively
-        read -sp "Enter your GitHub token (github_pat_xxx): " GITHUB_TOKEN
+        read -p "Enter your GitHub token (github_pat_xxx): " GITHUB_TOKEN
     else
         # Piped input - try to read from tty
         if [ -c /dev/tty ]; then
             exec < /dev/tty
-            read -sp "Enter your GitHub token (github_pat_xxx): " GITHUB_TOKEN
+            read -p "Enter your GitHub token (github_pat_xxx): " GITHUB_TOKEN
         else
             # No tty available (CI/automation)
             print_error "No terminal available for input"
