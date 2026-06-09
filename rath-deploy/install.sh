@@ -251,6 +251,24 @@ run_main_installer() {
 
 # Main installation flow
 main() {
+    # When invoked via `curl … | bash`, our stdin is the pipe carrying the
+    # script bytes — any `read` would either block or return empty and the
+    # script would silently abort instead of prompting the user. Redirect
+    # stdin to the terminal once so every prompt below (reinstall? token,
+    # confirms, …) just works. If there's no TTY (true CI), tell the user
+    # to set GITHUB_TOKEN in the environment instead of dying mid-flow.
+    if [ ! -t 0 ]; then
+        if [ -c /dev/tty ]; then
+            exec < /dev/tty
+        elif [ -z "$GITHUB_TOKEN" ]; then
+            print_error "No terminal available and GITHUB_TOKEN is not set"
+            print_info "For non-interactive use, run:"
+            echo "  export GITHUB_TOKEN='your_token'"
+            echo "  curl -fsSL https://raw.githubusercontent.com/sidhen-ai/installers/main/rath-deploy/install.sh | bash"
+            exit 1
+        fi
+    fi
+
     print_header
 
     print_info "Starting preflight checks..."
