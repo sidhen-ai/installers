@@ -297,15 +297,13 @@ main() {
 
     clone_repository
     run_main_installer
+
+    # MUST be inside main(). Once we `exec < /dev/tty`, bash stops reading
+    # subsequent script bytes from the curl pipe — so any `exit 0` placed
+    # *after* `main` at top level is unreachable. The trailing `exit 0`
+    # outside main is dead code; this is the real one.
+    exit 0
 }
 
 # Run main function
 main
-
-# Force exit so `curl | bash` returns to the parent shell. Without this,
-# bash keeps reading from stdin after `main` returns — and because we did
-# `exec < /dev/tty` to make prompts work, stdin is now the terminal, which
-# never EOFs. The user sees the install summary, the terminal "hangs", and
-# even pressing Enter doesn't get them back to a prompt (bash reads each
-# keystroke as a new command).
-exit 0
