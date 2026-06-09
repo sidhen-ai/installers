@@ -56,8 +56,28 @@ check_existing_installation() {
             echo "Installation cancelled."
             exit 0
         fi
+
+        # Stop running services before deleting the install dir. Otherwise
+        # LiveKit / glinn / sithe-core keep running with PID files yanked
+        # out from under them, occupying ports 7880 / 3000 so the new
+        # install can't bind. Prefer `rath stop` (knows about all three);
+        # fall back to pkill-by-name if the rath command is broken/missing.
+        print_info "Stopping running services..."
+        if command -v rath >/dev/null 2>&1; then
+            rath stop 2>/dev/null || true
+        else
+            pkill -f 'livekit-server' 2>/dev/null || true
+            pkill -f 'next-server'    2>/dev/null || true
+            pkill -f 'sithe-core'     2>/dev/null || true
+        fi
+        # Give the OS a moment to release ports.
+        sleep 2
+
         print_info "Removing existing installation..."
         rm -rf "$INSTALL_DIR"
+        # Symlink would otherwise dangle and `command -v rath` keeps
+        # reporting an executable that no longer exists.
+        rm -f "$HOME/.local/bin/rath"
     fi
 }
 
