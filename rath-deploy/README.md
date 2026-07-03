@@ -154,4 +154,4 @@ For issues, contact the SIDHEN engineering team.
 
 ## License
 
-Internal use only — SIDHEN Avatar Intelligence.
+Internal use only — SIDHEN LIMITED.
