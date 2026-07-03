@@ -256,9 +256,30 @@ run_main_installer() {
     # Make installer executable
     chmod +x src/install.sh
 
-    # Run installer with token
-    ./src/install.sh "$GITHUB_TOKEN"
+    # Run installer with token, passing through the SDK source flag if the
+    # user set one on the bootstrap invocation.
+    local extra_args=()
+    [ -n "$SDK_SOURCE_ARG" ] && extra_args+=("--sdk-source=$SDK_SOURCE_ARG")
+
+    ./src/install.sh "$GITHUB_TOKEN" "${extra_args[@]}"
 }
+
+# Parse bootstrap-level flags. Only --sdk-source= for now; others fall through.
+SDK_SOURCE_ARG=""
+for arg in "$@"; do
+    case "$arg" in
+        --sdk-source=*)
+            SDK_SOURCE_ARG="${arg#--sdk-source=}"
+            case "$SDK_SOURCE_ARG" in
+                cloud|local) ;;
+                *)
+                    print_error "Invalid --sdk-source='$SDK_SOURCE_ARG' (expected: cloud|local)"
+                    exit 1
+                    ;;
+            esac
+            ;;
+    esac
+done
 
 # Main installation flow
 main() {
