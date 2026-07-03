@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Bootstrap Installer for the SIDHEN Avatar Intelligence local development stack.
+# Bootstrap Installer for the SIDHEN local development stack.
 # Public entry point (macOS).
 #
 # Usage: curl -fsSL https://raw.githubusercontent.com/sidhen-ai/installers/main/rath-deploy/install.sh | bash

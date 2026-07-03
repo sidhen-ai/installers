@@ -6,7 +6,7 @@ Public installation scripts for SIDHEN Avatar Intelligence's internal developmen
 
 ### Local Development Stack
 
-Local development environment for the SIDHEN Avatar Intelligence platform (macOS only).
+Local development environment for the SIDHEN platform (macOS only).
 
 **Installation:**
 
@@ -25,7 +25,7 @@ curl -fsSL https://raw.githubusercontent.com/sidhen-ai/installers/main/rath-depl
 
 ## Creating a GitHub Token
 
-All installers require a GitHub Fine-grained Personal Access Token with access to SIDHEN Avatar Intelligence's private repositories.
+All installers require a GitHub Fine-grained Personal Access Token with access to SIDHEN's private repositories.
 
 **Steps:**
 1. Go to: https://github.com/settings/personal-access-tokens/new
@@ -42,10 +42,6 @@ All installers require a GitHub Fine-grained Personal Access Token with access t
 
 ## Support
 
-For issues or questions, contact the SIDHEN Avatar Intelligence engineering team.
+For issues or questions, contact the SIDHEN engineering team.
 
 **Repository:** https://github.com/sidhen-ai/installers
-
----
-
-**Note:** SIDHEN is always written in all caps.

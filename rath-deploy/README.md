@@ -150,7 +150,7 @@ tail -f ~/rath-deploy/logs/install.log
 
 ## Support
 
-For issues, contact the SIDHEN Avatar Intelligence engineering team.
+For issues, contact the SIDHEN engineering team.
 
 ## License
 
