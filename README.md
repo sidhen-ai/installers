@@ -1,6 +1,6 @@
 # SIDHEN Installers
 
-Public installation scripts for SIDHEN Avatar Intelligence's internal development stack.
+Public installation scripts for the SIDHEN local development stack.
 
 ## Available Installers
 
