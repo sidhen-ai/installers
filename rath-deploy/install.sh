@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# RATH Deploy Bootstrap Installer
-# Public entry point for installing RATH Deploy on macOS
+# Bootstrap Installer for the SIDHEN Avatar Intelligence local development stack.
+# Public entry point (macOS).
 #
 # Usage: curl -fsSL https://raw.githubusercontent.com/sidhen-ai/installers/main/rath-deploy/install.sh | bash
 #
@@ -22,10 +22,10 @@ REPO_URL="https://github.com/sidhen-ai/rath-deploy.git"
 # Print functions
 print_header() {
     echo ""
-    echo "╔════════════════════════════════════════════╗"
-    echo "║     RATH Deploy - Installation Wizard      ║"
-    echo "║           SIDHEN AI Avatar Stack           ║"
-    echo "╚════════════════════════════════════════════╝"
+    echo "╔══════════════════════════════════════════════════╗"
+    echo "║          Local Stack Installation Wizard         ║"
+    echo "║             SIDHEN Avatar Intelligence           ║"
+    echo "╚══════════════════════════════════════════════════╝"
     echo ""
 }
 
@@ -48,7 +48,7 @@ print_info() {
 # Check if already installed
 check_existing_installation() {
     if [ -d "$INSTALL_DIR" ]; then
-        print_warning "RATH Deploy is already installed at $INSTALL_DIR"
+        print_warning "The local stack is already installed at $INSTALL_DIR"
         echo ""
         read -p "Reinstall? This will remove the existing installation [y/N]: " -n 1 -r
         echo ""
@@ -58,10 +58,10 @@ check_existing_installation() {
         fi
 
         # Stop running services before deleting the install dir. Otherwise
-        # LiveKit / glinn / sithe-core keep running with PID files yanked
-        # out from under them, occupying ports 7880 / 3000 so the new
-        # install can't bind. Prefer `rath stop` (knows about all three);
-        # fall back to pkill-by-name if the rath command is broken/missing.
+        # the backing services keep running with PID files yanked out from
+        # under them, occupying ports 7880 / 3000 so the new install can't
+        # bind. Prefer the `rath stop` command (knows about all services);
+        # fall back to pkill-by-name if the command is broken/missing.
         print_info "Stopping running services..."
         if command -v rath >/dev/null 2>&1; then
             rath stop 2>/dev/null || true
@@ -136,7 +136,7 @@ get_github_token() {
     echo "📖 Create a token at:"
     echo "   https://github.com/settings/personal-access-tokens/new"
     echo ""
-    echo "   Token name: RATH Deploy"
+    echo "   Token name: SIDHEN Local Stack   (any name works)"
     echo "   Expiration: 90 days (recommended)"
     echo ""
     echo "   Repository access → Only select repositories:"

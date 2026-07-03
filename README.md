@@ -1,17 +1,12 @@
 # SIDHEN Installers
 
-Public installation scripts for SIDHEN internal tools.
+Public installation scripts for SIDHEN Avatar Intelligence's internal development stack.
 
 ## Available Installers
 
-### RATH Deploy
+### Local Development Stack
 
-Local development stack for SIDHEN AI Avatar system (macOS only).
-
-**What it includes:**
-- LiveKit Server (WebRTC infrastructure)
-- glinn-app (Web UI)
-- cairn-kiosk (Native macOS app)
+Local development environment for the SIDHEN Avatar Intelligence platform (macOS only).
 
 **Installation:**
 
@@ -30,7 +25,7 @@ curl -fsSL https://raw.githubusercontent.com/sidhen-ai/installers/main/rath-depl
 
 ## Creating a GitHub Token
 
-All installers require a GitHub Fine-grained Personal Access Token with access to SIDHEN private repositories.
+All installers require a GitHub Fine-grained Personal Access Token with access to SIDHEN Avatar Intelligence's private repositories.
 
 **Steps:**
 1. Go to: https://github.com/settings/personal-access-tokens/new
@@ -47,7 +42,7 @@ All installers require a GitHub Fine-grained Personal Access Token with access t
 
 ## Support
 
-For issues or questions, contact the SIDHEN engineering team.
+For issues or questions, contact the SIDHEN Avatar Intelligence engineering team.
 
 **Repository:** https://github.com/sidhen-ai/installers
 

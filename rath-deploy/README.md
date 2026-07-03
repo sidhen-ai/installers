@@ -1,22 +1,19 @@
-# RATH Deploy Installer
+# Local Development Stack Installer
 
-One-command installation for the complete SIDHEN AI Avatar development stack on macOS.
+One-command installation for the complete SIDHEN Avatar Intelligence local development stack on macOS.
 
 ## What Gets Installed
 
 - **LiveKit Server**: WebRTC infrastructure (port 7880)
-- **glinn-app**: Next.js web application (port 3000)
-- **cairn-kiosk**: Native macOS kiosk application
+- **Web application**: Next.js web UI (port 3000)
+- **Kiosk application**: Native macOS kiosk app
 
 All services are installed to `~/rath-deploy` and will NOT affect your existing projects in `~/Code`.
 
 ## Prerequisites
 
 - **macOS**: 13.0 or later (Ventura, Sonoma, Sequoia)
-- **GitHub Token**: Fine-grained Personal Access Token with access to:
-  - `sidhen-ai/rath-deploy`
-  - `sidhen-ai/glinn-app`
-  - `sidhen-ai/cairn-kiosk`
+- **GitHub Token**: Fine-grained Personal Access Token with access to the repositories listed in Step 1 below.
 
 ## Installation
 
@@ -24,12 +21,9 @@ All services are installed to `~/rath-deploy` and will NOT affect your existing 
 
 1. Visit: https://github.com/settings/personal-access-tokens/new
 2. Configure:
-   - **Token name**: `RATH Deploy`
+   - **Token name**: Any name you prefer (e.g. `SIDHEN Local Stack`)
    - **Expiration**: 90 days
-   - **Repository access**: Only select repositories
-     - ✓ `sidhen-ai/rath-deploy`
-     - ✓ `sidhen-ai/glinn-app`
-     - ✓ `sidhen-ai/cairn-kiosk`
+   - **Repository access**: Only select repositories — pick the ones the installer needs (the engineering team will provide the list)
    - **Repository permissions**:
      - Contents: **Read**
      - Metadata: **Read**
@@ -76,43 +70,24 @@ rath start      # Start all services
 rath stop       # Stop all services
 rath status     # Show service status
 rath logs       # View logs
-rath uninstall  # Completely remove RATH Deploy
+rath uninstall  # Completely remove the local stack
 ```
 
 ## What Happens During Installation
 
 1. **Preflight checks**: Verifies macOS version, checks for Xcode CLI tools
 2. **Dependencies**: Installs Homebrew (if needed), Node.js, LiveKit
-3. **Repository cloning**: Clones private repos to `~/rath-deploy/services/`
-4. **Service setup**:
-   - LiveKit: Creates config, generates API keys
-   - glinn-app: Installs npm dependencies, creates `.env.local`
-   - cairn-kiosk: Builds Xcode project
-5. **Path setup**: Creates `rath` command in `~/.local/bin/`
+3. **Repository cloning**: Clones private repositories to `~/rath-deploy/services/`
+4. **Service setup**: Configures each service and generates local credentials
+5. **Path setup**: Creates the `rath` command in `~/.local/bin/`
 
-## Installation Directory Structure
+## Installation Directory
 
-```
-~/rath-deploy/
-├── .github-token          # Your token (gitignored, chmod 600)
-├── .install-manifest.json # Installation metadata
-├── rath -> src/rath.sh   # Symlink for 'rath' command
-├── services/
-│   ├── livekit/
-│   │   ├── config.yaml
-│   │   └── livekit.pid
-│   ├── glinn-app/
-│   │   ├── repo/         # Cloned from GitHub
-│   │   ├── .env.local
-│   │   └── node_modules/
-│   └── cairn-kiosk/
-│       ├── repo/         # Cloned from GitHub
-│       └── build/
-└── logs/
-    ├── livekit.log
-    ├── glinn-app.log
-    └── install.log
-```
+Everything lives under `~/rath-deploy/`:
+- Service repositories, logs, and configuration
+- Your GitHub token (chmod 600, gitignored)
+- An installation manifest with metadata
+- A symlink that exposes the `rath` command
 
 ## Uninstalling
 
@@ -130,7 +105,7 @@ You'll be prompted to:
 ### Complete Removal
 
 The uninstaller removes:
-- `~/rath-deploy/` directory (all cloned repos, configs, logs)
+- `~/rath-deploy/` directory (all cloned repositories, configs, logs)
 - `~/.local/bin/rath` symlink
 
 The uninstaller preserves:
@@ -149,7 +124,7 @@ If port 7880 or 3000 is already in use:
 lsof -i :7880
 lsof -i :3000
 
-# Kill the process or configure RATH to use different ports
+# Kill the process or configure the stack to use different ports
 rath configure
 ```
 
@@ -157,10 +132,10 @@ rath configure
 
 If you get authentication errors:
 
-1. Verify token has access to all three repositories
-2. Check token hasn't expired
-3. Ensure token has `Contents: Read` permission
-4. Regenerate token if needed
+1. Verify the token has access to all required repositories
+2. Check the token hasn't expired
+3. Ensure the token has `Contents: Read` permission
+4. Regenerate the token if needed
 
 ### Logs
 
@@ -171,15 +146,12 @@ rath logs
 
 # Or directly:
 tail -f ~/rath-deploy/logs/install.log
-tail -f ~/rath-deploy/logs/livekit.log
-tail -f ~/rath-deploy/logs/glinn-app.log
 ```
 
 ## Support
 
-For issues, contact the SIDHEN engineering team or file an issue at:
-https://github.com/sidhen-ai/rath-deploy/issues
+For issues, contact the SIDHEN Avatar Intelligence engineering team.
 
 ## License
 
-Internal use only - SIDHEN AI
+Internal use only — SIDHEN Avatar Intelligence.
