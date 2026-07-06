@@ -289,8 +289,14 @@ main() {
     # stdin to the terminal once so every prompt below (reinstall? token,
     # confirms, …) just works. If there's no TTY (true CI), tell the user
     # to set GITHUB_TOKEN in the environment instead of dying mid-flow.
+    #
+    # We test the tty by actually opening it (`exec < /dev/tty` in a
+    # subshell), not with `[ -c /dev/tty ]` — on macOS the device node
+    # always exists even when the process has no controlling terminal
+    # (sandboxed agents, some CI runners, `ssh -T`, etc.), and opening
+    # it under those conditions raises "Device not configured".
     if [ ! -t 0 ]; then
-        if [ -c /dev/tty ]; then
+        if (exec < /dev/tty) 2>/dev/null; then
             exec < /dev/tty
         elif [ -z "$GITHUB_TOKEN" ]; then
             print_error "No terminal available and GITHUB_TOKEN is not set"
