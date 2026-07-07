@@ -205,8 +205,24 @@ verify_token_access() {
     )
 
     for repo in "${repos[@]}"; do
-        # Use git ls-remote with timeout to prevent hanging
-        if GIT_TERMINAL_PROMPT=0 git -c http.timeout=30 -c http.sslVerify=false ls-remote "https://oauth2:${GITHUB_TOKEN}@github.com/${repo}.git" HEAD > /dev/null 2>&1; then
+        # Retry the reachability probe: GitHub over HTTPS intermittently resets
+        # the TLS connection (LibreSSL SSL_ERROR_SYSCALL), and a single-shot
+        # ls-remote turned that transient blip into a false "Cannot access X"
+        # that sent users chasing token/permission problems that didn't exist.
+        # 3 attempts with 2s/4s backoff.
+        local verified=0 attempt delay=2
+        for attempt in 1 2 3; do
+            if GIT_TERMINAL_PROMPT=0 git -c http.timeout=30 -c http.sslVerify=false ls-remote "https://oauth2:${GITHUB_TOKEN}@github.com/${repo}.git" HEAD > /dev/null 2>&1; then
+                verified=1
+                break
+            fi
+            if [ "$attempt" -lt 3 ]; then
+                sleep "$delay"
+                delay=$((delay * 2))
+            fi
+        done
+
+        if [ "$verified" -eq 1 ]; then
             print_success "Access verified: $repo"
         else
             print_error "Cannot access $repo"
@@ -216,7 +232,7 @@ verify_token_access() {
             echo "  2. You have access to the repository"
             echo "  3. Token has required permissions (Contents: Read, Metadata: Read)"
             echo "  4. Repository is selected in token's repository access list"
-            echo "  5. Network connection is stable"
+            echo "  5. Network connection is stable (retried 3x — persistent failures may be a network issue, not the token)"
             exit 1
         fi
     done
@@ -227,7 +243,24 @@ clone_repository() {
     echo ""
     print_info "Cloning rath-deploy repository..."
 
-    if GIT_TERMINAL_PROMPT=0 git -c http.sslVerify=false clone --depth 1 "https://oauth2:${GITHUB_TOKEN}@github.com/sidhen-ai/rath-deploy.git" "$INSTALL_DIR" > /dev/null 2>&1; then
+    # Retry the clone for the same reason as verify_token_access: a single
+    # transient TLS reset mid-clone would otherwise abort the whole install.
+    # 3 attempts with 2s/4s backoff; wipe any partial dir between tries.
+    local cloned=0 attempt delay=2
+    for attempt in 1 2 3; do
+        rm -rf "$INSTALL_DIR"
+        if GIT_TERMINAL_PROMPT=0 git -c http.timeout=30 -c http.sslVerify=false clone --depth 1 "https://oauth2:${GITHUB_TOKEN}@github.com/sidhen-ai/rath-deploy.git" "$INSTALL_DIR" > /dev/null 2>&1; then
+            cloned=1
+            break
+        fi
+        if [ "$attempt" -lt 3 ]; then
+            print_warning "Clone attempt $attempt/3 failed (transient network?), retrying in ${delay}s..."
+            sleep "$delay"
+            delay=$((delay * 2))
+        fi
+    done
+
+    if [ "$cloned" -eq 1 ]; then
         # Strip the embedded read-only PAT from .git/config so any future
         # `git push` / `git pull` in this working copy goes through the
         # user's normal credentials (keychain / gh / etc.) instead of
@@ -236,11 +269,12 @@ clone_repository() {
             "https://github.com/sidhen-ai/rath-deploy.git" 2>/dev/null || true
         print_success "Repository cloned to $INSTALL_DIR"
     else
-        print_error "Failed to clone repository"
+        print_error "Failed to clone repository after 3 attempts"
         print_info "Please check:"
         echo "  1. Repository exists and is accessible"
         echo "  2. Token has 'Contents: Read' permission"
         echo "  3. Install directory is writable: $INSTALL_DIR"
+        echo "  4. Network connection is stable (retried 3x)"
         exit 1
     fi
 }
