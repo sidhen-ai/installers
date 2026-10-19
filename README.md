@@ -1,47 +1,22 @@
 # SIDHEN Installers
 
-Public installation scripts for the SIDHEN local development stack.
+Public bootstrap scripts for SIDHEN software. Each installer lives in its own
+directory and is fetched with `curl` from this repository.
 
-## Available Installers
+## Installers
 
-### Local Development Stack
+| Directory | What it installed | Status |
+|---|---|---|
+| [`rath-deploy/`](./rath-deploy/README.md) | The SIDHEN local stack on macOS: clones the private `rath-deploy` repository and the service repositories it needs into `~/rath-deploy`, and adds the `rath` command | **Retired (2026-10-19).** A SIDHEN device now runs its services through cairn-shell; do not use this installer for new machines. Kept for history. |
 
-Local development environment for the SIDHEN platform (macOS only).
+There is no installer here that is in current use.
 
-**Installation:**
+## GitHub token
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/sidhen-ai/installers/main/rath-deploy/install.sh | bash
-```
-
-**Requirements:**
-- macOS 13.0+
-- GitHub Fine-grained Personal Access Token
-- Xcode Command Line Tools
-
-**Documentation:** [rath-deploy/README.md](./rath-deploy/README.md)
-
----
-
-## Creating a GitHub Token
-
-All installers require a GitHub Fine-grained Personal Access Token with access to SIDHEN's private repositories.
-
-**Steps:**
-1. Go to: https://github.com/settings/personal-access-tokens/new
-2. Token name: `SIDHEN Installers`
-3. Expiration: 90 days (recommended)
-4. Repository access: **Only select repositories**
-   - Select the repositories needed for your installer
-5. Repository permissions:
-   - **Contents**: Read-only
-   - **Metadata**: Read-only
-6. Generate token and save it securely
-
----
+The `rath-deploy` installer asks for a GitHub fine-grained personal access
+token with read access (Contents, Metadata) to the private SIDHEN repositories
+it clones. Its README has the steps.
 
 ## Support
 
 For issues or questions, contact the SIDHEN engineering team.
-
-**Repository:** https://github.com/sidhen-ai/installers
