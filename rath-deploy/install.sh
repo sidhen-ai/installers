@@ -1,4 +1,11 @@
 #!/bin/bash
+# Retired (2026-10-19): rath is no longer installed on any machine; a SIDHEN
+# device runs its services through cairn-shell. This script also cloned with
+# TLS verification off while sending a GitHub token, so it stops here. The
+# rest is kept for history only.
+echo "rath-deploy is retired (2026-10-19) and can no longer be installed." >&2
+exit 1
+
 #
 # Bootstrap Installer for the SIDHEN local development stack.
 # Public entry point (macOS).
