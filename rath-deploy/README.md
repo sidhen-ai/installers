@@ -1,5 +1,9 @@
 # Local Development Stack Installer
 
+> **Retired (2026-10-19).** Do not use this installer for new machines: a
+> SIDHEN device runs its services through cairn-shell (formerly cairn-kiosk),
+> and developers use cairn-shell's developer mode. Kept for history.
+
 One-command installation for the complete SIDHEN Avatar Intelligence local development stack on macOS.
 
 ## What Gets Installed
